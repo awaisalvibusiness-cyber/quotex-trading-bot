@@ -45,10 +45,29 @@ if "market_cache" not in st.session_state:
 
 # --------------------------- Sidebar -------------------------
 st.sidebar.header("Scanner settings")
-selected_assets = st.sidebar.multiselect(
-    "Assets to scan", AVAILABLE_ASSETS, default=AVAILABLE_ASSETS,
-    help="All 19 assets are selected by default. Select fewer if loading is slow.",
+# Master View Mode Configuration Choice
+view_mode = st.sidebar.radio(
+    "Select App Mode On Startup:",
+    ["🎯 Single Asset Focus", "🌐 Complete Market Matrix Scan"],
+    index=0,  # Forces Single Asset Mode by default when you manually open the app
+    help="Single mode optimizes speed. Matrix mode checks everything at once."
 )
+
+if view_mode == "🎯 Single Asset Focus":
+    # Drops a clean dropdown menu so you choose exactly ONE asset manually
+    manual_choice = st.sidebar.selectbox(
+        "Choose focus asset:", 
+        AVAILABLE_ASSETS, 
+        index=0  # Defaults to EUR/USD on bootup
+    )
+    selected_assets = [manual_choice]
+else:
+    # Falls back to your original multi-select matrix dashboard array
+    selected_assets = st.sidebar.multiselect(
+        "Assets to scan", AVAILABLE_ASSETS, default=AVAILABLE_ASSETS,
+        help="All 19 assets are selected by default."
+    )
+
 st.sidebar.caption(f"{len(selected_assets)} / {len(AVAILABLE_ASSETS)} assets selected")
 selected_timeframe = st.sidebar.selectbox("Chart timeframe", list(TIMEFRAMES), index=0)
 chart_interval, chart_period, chart_seconds = TIMEFRAMES[selected_timeframe]

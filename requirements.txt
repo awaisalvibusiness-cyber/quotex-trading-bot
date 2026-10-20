@@ -1,6 +1,5 @@
-streamlit
+yfinance
 pandas
 numpy
-yfinance
 plotly
-playsound==1.2.2
+streamlit-autorefresh

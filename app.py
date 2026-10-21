@@ -72,7 +72,7 @@ st.sidebar.caption(f"{len(selected_assets)} / {len(AVAILABLE_ASSETS)} assets sel
 selected_timeframe = st.sidebar.selectbox("Chart timeframe", list(TIMEFRAMES), index=0)
 chart_interval, chart_period, chart_seconds = TIMEFRAMES[selected_timeframe]
 clock_offset = st.sidebar.number_input(
-    "Candle clock adjustment (seconds)", min_value=-120, max_value=120, value=-23, step=1,
+    "Candle clock adjustment (seconds)", min_value=-120, max_value=120, value=0, step=1,
     help="Keep at 0 unless you have measured a consistent difference..."
 )
 

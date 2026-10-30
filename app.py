@@ -473,37 +473,6 @@ def play_signal_alarm(pair_name: str, signal_type: str):
     "displayed_at": None
 })
 
-def render_persistent_alarm():
-    alarm = st.session_state.get("visible_alarms")
-    
-    if not alarm:
-        return
-
-    if time.time() < alarm["expires_at"]:
-        st.markdown(
-            f"""
-            <div style="
-                position: fixed;
-                top: 15px;
-                right: 15px;
-                z-index: 999999;
-                background: #171b25;
-                color: white;
-                padding: 18px 24px;
-                border-radius: 10px;
-                border-left: 5px solid #ffc107;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-                font-weight: bold;
-                max-width: 420px;
-            ">
-                🔔 {alarm["message"]}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    else:
-        st.session_state["visible_alarms"] = None
-
 
 # ----------------------- Clock / formatting ------------------
 def candle_clock(seconds: int):
@@ -589,7 +558,6 @@ def render_persistent_alarms():
 
     st.session_state.visible_alarms = active_alarms
 # --------------------- Fast scanner fragment ------------------
-render_persistent_alarm()
 @st.fragment(run_every=1)
 def render_scanner():
     if not selected_assets:
@@ -672,8 +640,10 @@ def render_scanner():
                         f"RSI: {latest['RSI']:.1f} · EMA200: {fmt_price(latest['EMA_200'])}"
                     )
 
+    # Render notifications inside the same fragment that creates them.
+    render_persistent_alarms()
 
-render_persistent_alarms()
+
 # ---------------- Detailed analysis fragment -----------------
 @st.fragment(run_every=15)
 def render_deep_dive():
